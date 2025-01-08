@@ -1,3 +1,3 @@
-2025-01-08 15:21:04 [INFO]: Logger initialized with file level: DEBUG and console level: INFO
-2025-01-08 15:21:05 [INFO]: ✅ Binance Futures Client initialized.
-2025-01-08 15:21:11 [ERROR]: ❌ Failed to fetch balance: binance {"code":-2015,"msg":"Invalid API-key, IP, or permissions for action"}
+2025-01-08 17:22:33 [INFO]: Logger initialized with file level: DEBUG and console level: INFO
+2025-01-08 17:22:36 [INFO]: ✅ Binance Futures Client initialized.
+2025-01-08 17:22:41 [ERROR]: ❌ Failed to fetch balance: binance {"code":-2015,"msg":"Invalid API-key, IP, or permissions for action"}

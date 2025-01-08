@@ -1,20 +1,26 @@
 # config.py
 
-API_KEY = "W6ExGwLORN6bhkQGobceWZbs2blozgXG8oI5PAlJDmOV3gKg6Rx0LOdskBDb3EqV"
-SECRET_KEY = "631UzythueU17d2GSuUc3KBPSRjnR9ADiRejkpm2KUBjkj6oA96V99VAe3GOLOJo"
-TESTNET = False  # Set to False for live trading
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv()
+
+API_KEY = os.getenv('API_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY')
+TESTNET = os.getenv('TESTNET') == 'True'
 
 # Trading Parameters
-LIVE_SYMBOL = "BTCUSD"
-STOP_LOSS = 0.02
-PROFIT_TARGET = 0.05
-SHORT_WINDOW = 100
-LONG_WINDOW = 400
-ENABLE_LONGING = True
-ENABLE_SHORTING = True
-LEVERAGE = 5
+LIVE_SYMBOL = os.getenv('LIVE_SYMBOL')
+STOP_LOSS = float(os.getenv('STOP_LOSS'))
+PROFIT_TARGET = float(os.getenv('PROFIT_TARGET'))
+SHORT_WINDOW = int(os.getenv('SHORT_WINDOW'))
+LONG_WINDOW = int(os.getenv('LONG_WINDOW'))
+ENABLE_LONGING = os.getenv('ENABLE_LONGING') == 'True'
+ENABLE_SHORTING = os.getenv('ENABLE_SHORTING') == 'True'
+LEVERAGE = int(os.getenv('LEVERAGE'))
 
 # Logging Configuration
-LOG_FOLDER = './logs'
-LOG_FILE = f"{LOG_FOLDER}/trading_bot.log"
-LOG_LEVEL = 'DEBUG'
+LOG_FOLDER = os.getenv('LOG_FOLDER')
+LOG_FILE = os.getenv('LOG_FILE')
+LOG_LEVEL = os.getenv('LOG_LEVEL')
