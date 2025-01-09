@@ -1,5 +1,4 @@
 from live_trading.binance_client import BinanceClient
-from live_trading.order_manager import OrderManager
 from strategies.live_strategy import LiveStrategy, Signal
 from utils.logger import logger
 from visualization.live_plot_results import plot_results
@@ -14,18 +13,15 @@ from datetime import datetime
 class LiveTrader:
     def __init__(self, config):
         self.client = BinanceClient(config['API_KEY'], config['SECRET_KEY'])
-        self.order_manager = OrderManager(self.client)
         self.strategy = LiveStrategy(
             stop_loss=config['STOP_LOSS'],
             profit_target=config['PROFIT_TARGET'],
             short_window=config['SHORT_WINDOW'],
             long_window=config['LONG_WINDOW'],
             enable_longing=config['ENABLE_LONGING'],
-            enable_shorting=config['ENABLE_SHORTING']
         )
         self.symbol = config['LIVE_SYMBOL']
-        self.leverage = config['LEVERAGE']
-
+        
         self.stop_reason = 'Unknown'
         self.error_message = ''
         self.run_folder = self.create_run_folder()
@@ -43,6 +39,7 @@ class LiveTrader:
 
         # Fetch Historical Data
         self.prefill_historical_data()
+        self.trade_money_usd = 11
     def create_run_folder(self):
         """Create a unique folder for each trading run."""
         base_path = './data/live_runs'
@@ -68,15 +65,13 @@ class LiveTrader:
             trade_data = {
                 'timestamp': pd.to_datetime(timestamp).strftime('%Y-%m-%d %H:%M:%S'),
                 'close': price,
-                'FAST_IND': self.strategy.data['FAST_IND'].iloc[-1] if not self.strategy.data.empty else None,
-                'SLOW_IND': self.strategy.data['SLOW_IND'].iloc[-1] if not self.strategy.data.empty else None,
+                'FAST_IND': float(self.strategy.data['FAST_IND'].iloc[-1]),
+                'SLOW_IND': float(self.strategy.data['SLOW_IND'].iloc[-1]),
                 'action': action,
                 'position': position,
                 'stop_reason': self.stop_reason,
                 'error_message': self.error_message
             }
-            logger.info(f"📝 Recording trade: {trade_data}")
-
             # Write to CSV incrementally
             with open(self.csv_path, mode='a', newline='') as file:
                 writer = csv.DictWriter(
@@ -87,7 +82,6 @@ class LiveTrader:
                 if file.tell() == 0:
                     writer.writeheader()
                 writer.writerow(trade_data)
-                logger.info("✅ Data  successfully written to CSV.")
 
         except Exception as e:
             logger.error(f"❌ Failed to record data: {e}")
@@ -138,34 +132,33 @@ class LiveTrader:
         try:
             while True:
                 try:
+                    # usdc_value = self.client.get_balance('USDC')
+                    btc_quantity = self.client.get_balance('BTC')
                     # Fetch current ticker price
                     ticker = self.client.get_ticker(self.symbol)
                     price = ticker['last']
-                    
-                    order_quantity = 1
+                    quantity = self.trade_money_usd / price  #OR usdc value for full balance
                     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
                     # Update strategy with the latest price
                     self.strategy.update_data(price)
                     signal = self.strategy.get_signal()
-                    
                     #Handle Signals
                     if signal == Signal.BUY_LONG:  # Koop, uptrend
                         logger.info("🟢 Opening LONG position.")
-                        self.order_manager.place_order(self.symbol, 'BUY', order_quantity, 'MARKET', price)
+                        self.client.create_order(self.symbol, 'MARKET', 'BUY', quantity)
                         self.record_data(timestamp, price, 'BUY', 'LONG')
                     elif signal == Signal.SELL_LONG:
                         logger.info("🔴 Closing LONG position.")
-                        self.order_manager.place_order(self.symbol, 'SELL', order_quantity, 'MARKET', price)
+                        self.client.create_order(self.symbol, 'MARKET', 'SELL', btc_quantity)
                         self.record_data(timestamp, price, 'SELL', 'LONG')
                     elif signal == Signal.STOP_LOSS_LONG:
                         logger.info("🛑 Stop-Loss triggered for LONG. Closing LONG position.")
-                        self.order_manager.place_order(self.symbol, 'SELL', order_quantity, 'MARKET', price)
+                        self.client.create_order(self.symbol, 'MARKET', 'SELL', btc_quantity)
                         self.record_data(timestamp, price, 'STOP_LOSS', 'LONG')
                     elif signal == Signal.HOLD:
                         logger.info("HOLD position triggered.")
                         self.record_data(timestamp, price, 'HOLD', '')
-                        
+
                     # Update plot
                     try:
                         df = pd.read_csv(self.csv_path, parse_dates=['timestamp'])
@@ -186,7 +179,8 @@ class LiveTrader:
         except KeyboardInterrupt:
             self.stop_reason = 'Manual Stop'
             logger.info("🛑 Live trading manually stopped by user.")
-
+        except Exception as e:
+            logger.error(f"❌ Error: {e}")
         finally:
             try:
                 plot_results(pd.read_csv(self.csv_path, parse_dates=['timestamp']).set_index('timestamp'), self.plot_path)

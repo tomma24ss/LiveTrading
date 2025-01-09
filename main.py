@@ -1,7 +1,7 @@
 # main.py
 
 from live_trading.live_trader import LiveTrader
-from config import API_KEY, SECRET_KEY, TESTNET, LIVE_SYMBOL, STOP_LOSS, PROFIT_TARGET, SHORT_WINDOW, LONG_WINDOW, ENABLE_LONGING, ENABLE_SHORTING, LEVERAGE
+from config import API_KEY, SECRET_KEY, TESTNET, LIVE_SYMBOL, STOP_LOSS, PROFIT_TARGET, SHORT_WINDOW, LONG_WINDOW, ENABLE_LONGING
 
 if __name__ == '__main__':
     # Initialize and Start Live Trader
@@ -14,9 +14,7 @@ if __name__ == '__main__':
         'SHORT_WINDOW': SHORT_WINDOW,
         'LONG_WINDOW': LONG_WINDOW,
         'ENABLE_LONGING': ENABLE_LONGING,
-        'ENABLE_SHORTING': ENABLE_SHORTING,
         'LIVE_SYMBOL': LIVE_SYMBOL,
-        'LEVERAGE': LEVERAGE
     })
 
     # Run the Trader

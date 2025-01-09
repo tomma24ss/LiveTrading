@@ -7,8 +7,6 @@ def plot_results(df, output_file='trading_results.png'):
     """
     Plot the trading results, including all Long and Short transactions, for any strategy.
     """
-    logger.info("📊 Generating trading results plot...")
-
     try:
         # Ensure DataFrame has a datetime index
         if not isinstance(df.index, pd.DatetimeIndex):

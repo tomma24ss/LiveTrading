@@ -27,7 +27,6 @@ class LiveStrategy:
         logger.info("✅ Live Strategy Initialized.")
         
         self.uptrend_triggered = False
-        self.downtrend_triggered = False
 
     def prefill_data(self, historical_data):
         """
@@ -82,6 +81,7 @@ class LiveStrategy:
 
 
     def get_signal(self):
+        return Signal.SELL_LONG
         """
         Generate trading signals based on strategy logic.
         Returns: Signal Enum (BUY, SELL, HOLD)
@@ -114,7 +114,6 @@ class LiveStrategy:
                 self.position = 'long'
                 self.entry_price = current_price
                 self.uptrend_triggered = True
-                self.downtrend_triggered = False
                 logger.info("🟢 Long Entry Signal Detected.")
                 return Signal.BUY_LONG
         if fast_ind <= slow_ind:

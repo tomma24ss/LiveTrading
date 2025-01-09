@@ -12,10 +12,10 @@ class BinanceClient:
         self.exchange = ccxt.binance({
             'apiKey': api_key,
             'secret': secret_key,
-            'enableRateLimit': True,
-            'options': {
-                'defaultType': 'future'  # Enable Futures Trading
-            }
+            # 'enableRateLimit': True,
+            # 'options': {
+            #     'defaultType': 'future'  # Enable Futures Trading
+            # }
         })
         self.exchange.load_markets()
         # self.exchange.verbose = True  # uncomment this line if it doesn't work
@@ -54,7 +54,7 @@ class BinanceClient:
         """
         try:
             params = {
-                'test': True
+                # 'test': True
             }
 
             if order_type == 'LIMIT' and price:
@@ -81,17 +81,14 @@ class BinanceClient:
             logger.error(f"❌ Failed to place order: {e}")
             raise
         
-    def get_balance(self):
+    def get_balance(self, symbol):
         """Fetch and print all wallet balances where the total is greater than 0."""
         try:
             # Fetch balance from the exchange
             balance = self.exchange.fetch_balance()
             
-            # Handle Euro specifically if available
-            euro_balance = balance.get('USDC', {}).get('total', 0)
-            if euro_balance > 0:
-                logger.info(f"💶 Euro Total Balance: {euro_balance} EUR")
-            return euro_balance
+            extrected_balance = balance.get(symbol, {}).get('free', 0)
+            return extrected_balance
     
         except Exception as e:
             logger.error(f"❌ Failed to fetch wallet balances: {e}")
@@ -144,13 +141,11 @@ class BinanceClient:
 if __name__ == "__main__":
     from config import API_KEY, SECRET_KEY
     
-    PROXY = 'http://username:password@proxyserver:port'  # Replace with your actual proxy
-
     if not API_KEY or not SECRET_KEY:
         raise ValueError("❌ API_KEY and SECRET_KEY environment variables must be set.")
     
     try:
-        client = BinanceClient(api_key=API_KEY, secret_key=SECRET_KEY, testnet=False)
+        client = BinanceClient(api_key=API_KEY, secret_key=SECRET_KEY)
 
         # Test Connectivity
         logger.info("🔗 Testing Binance API connectivity...")
@@ -165,5 +160,3 @@ if __name__ == "__main__":
 
     except Exception as e:
         logger.error(f"❌ API Test failed: {e}")
-#curl -x http://username:password@proxyserver:port https://api.binance.com/api/v3/time
-

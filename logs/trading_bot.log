@@ -1,43 +1,30 @@
-2025-01-09 15:26:44 [INFO]: Logger initialized with file level: DEBUG and console level: INFO
-2025-01-09 15:26:53 [INFO]: ✅ Binance Futures Client initialized.
-2025-01-09 15:26:53 [INFO]: ✅ Live Strategy Initialized.
-2025-01-09 15:26:53 [INFO]: 📁 Created run folder: ./data/live_runs/run2
-2025-01-09 15:26:53 [INFO]: 💾 Configuration saved to ./data/live_runs/run2/config_backup.py
-2025-01-09 15:26:53 [INFO]: 📄 Created new CSV file: ./data/live_runs/run2/data_trade.csv
-2025-01-09 15:26:53 [INFO]: 📥 Fetching 1000 minutes of historical data...
-2025-01-09 15:26:53 [INFO]: 📥 Fetching historical data for BTCUSDC, interval 1m, limit 1000...
-2025-01-09 15:26:53 [INFO]: ✅ Successfully fetched historical data.
-2025-01-09 15:26:53 [INFO]: 📥 Prefilling strategy with historical data...
-2025-01-09 15:26:53 [INFO]: ✅ Historical data successfully prefilled with indicators.
-2025-01-09 15:26:53 [INFO]: 📊 Prefill Data Preview:
-            timestamp    close      FAST_IND      SLOW_IND   action position stop_reason error_message
-0 2025-01-08 22:47:00  95121.9  95121.900000  95121.900000  PREFILL     NONE                          
-1 2025-01-08 22:48:00  94996.0  95058.320500  95058.792625  PREFILL     NONE                          
-2 2025-01-08 22:49:00  95013.9  95043.216553  95043.753533  PREFILL     NONE                          
-3 2025-01-08 22:50:00  94983.2  95027.759320  95028.501423  PREFILL     NONE                          
-4 2025-01-08 22:51:00  94901.8  95001.549807  95002.907104  PREFILL     NONE                          
-2025-01-09 15:26:53 [INFO]: ✅ Prefilled data successfully written to CSV with indicators.
-2025-01-09 15:26:53 [INFO]: 🚀 Starting live trading for BTCUSDC on Binance...
-2025-01-09 15:26:53 [INFO]: 📊 Fetched ticker for BTCUSDC: 93309.8
-2025-01-09 15:26:53 [INFO]: 📊 Indicators updated.
-2025-01-09 15:26:53 [INFO]: 📈 Current Price: 93309.8, FAST_IND: 92670.51870452586, SLOW_IND: 93006.50877021659
-2025-01-09 15:26:53 [INFO]: HOLD position triggered.
-2025-01-09 15:26:53 [INFO]: 📝 Recording trade: {'timestamp': '2025-01-09 15:26:53', 'close': 93309.8, 'FAST_IND': np.float64(92670.51870452586), 'SLOW_IND': np.float64(93006.50877021659), 'action': 'HOLD', 'position': '', 'stop_reason': 'Unknown', 'error_message': ''}
-2025-01-09 15:26:53 [INFO]: ✅ Data  successfully written to CSV.
-2025-01-09 15:26:53 [INFO]: 📊 Generating trading results plot...
-2025-01-09 15:26:54 [INFO]: ✅ Plot saved as ./data/live_runs/run2/plot.png
-2025-01-09 15:26:54 [INFO]: ✅ Run completed. Waiting 1 minute before the next iteration...
-2025-01-09 15:27:54 [INFO]: 📊 Fetched ticker for BTCUSDC: 93416.1
-2025-01-09 15:27:54 [INFO]: 📊 Indicators updated.
-2025-01-09 15:27:54 [INFO]: 📈 Current Price: 93416.1, FAST_IND: 92685.28269060407, SLOW_IND: 93008.56533826636
-2025-01-09 15:27:54 [INFO]: HOLD position triggered.
-2025-01-09 15:27:54 [INFO]: 📝 Recording trade: {'timestamp': '2025-01-09 15:27:54', 'close': 93416.1, 'FAST_IND': np.float64(92685.28269060407), 'SLOW_IND': np.float64(93008.56533826636), 'action': 'HOLD', 'position': '', 'stop_reason': 'Unknown', 'error_message': ''}
-2025-01-09 15:27:54 [INFO]: ✅ Data  successfully written to CSV.
-2025-01-09 15:27:54 [INFO]: 📊 Generating trading results plot...
-2025-01-09 15:27:55 [INFO]: ✅ Plot saved as ./data/live_runs/run2/plot.png
-2025-01-09 15:27:55 [INFO]: ✅ Run completed. Waiting 1 minute before the next iteration...
-2025-01-09 15:27:57 [INFO]: 🛑 Live trading manually stopped by user.
-2025-01-09 15:27:57 [INFO]: 📊 Generating trading results plot...
-2025-01-09 15:27:57 [INFO]: ✅ Plot saved as ./data/live_runs/run2/plot.png
-2025-01-09 15:27:57 [INFO]: ✅ Final plot generated successfully.
-2025-01-09 15:27:57 [INFO]: ✅ Live trading session completed.
+2025-01-09 23:29:50 [INFO]: Logger initialized with file level: DEBUG and console level: INFO
+2025-01-09 23:29:57 [INFO]: ✅ Binance Futures Client initialized.
+2025-01-09 23:29:57 [INFO]: ✅ Live Strategy Initialized.
+2025-01-09 23:29:57 [INFO]: 📁 Created run folder: ./data/live_runs/run18
+2025-01-09 23:29:57 [INFO]: 💾 Configuration saved to ./data/live_runs/run18/config_backup.py
+2025-01-09 23:29:57 [INFO]: 📄 Created new CSV file: ./data/live_runs/run18/data_trade.csv
+2025-01-09 23:29:57 [INFO]: 📥 Fetching 1000 minutes of historical data...
+2025-01-09 23:29:57 [INFO]: 📥 Fetching historical data for BTCUSDC, interval 1m, limit 1000...
+2025-01-09 23:29:57 [INFO]: ✅ Successfully fetched historical data.
+2025-01-09 23:29:57 [INFO]: 📥 Prefilling strategy with historical data...
+2025-01-09 23:29:57 [INFO]: ✅ Historical data successfully prefilled with indicators.
+2025-01-09 23:29:57 [INFO]: 📊 Prefill Data Preview:
+            timestamp     close      FAST_IND      SLOW_IND   action position stop_reason error_message
+0 2025-01-09 06:50:00  94148.00  94148.000000  94148.000000  PREFILL     NONE                          
+1 2025-01-09 06:51:00  94167.99  94158.194900  94158.044975  PREFILL     NONE                          
+2 2025-01-09 06:52:00  94090.90  94134.860140  94135.439129  PREFILL     NONE                          
+3 2025-01-09 06:53:00  94102.92  94126.389745  94127.186996  PREFILL     NONE                          
+4 2025-01-09 06:54:00  94093.20  94119.210359  94120.252972  PREFILL     NONE                          
+2025-01-09 23:29:57 [INFO]: ✅ Prefilled data successfully written to CSV with indicators.
+2025-01-09 23:29:57 [INFO]: 🚀 Starting live trading for BTCUSDC on Binance...
+2025-01-09 23:29:58 [INFO]: 📊 Fetched ticker for BTCUSDC: 92236.6
+2025-01-09 23:29:58 [INFO]: 📊 Indicators updated.
+2025-01-09 23:29:58 [INFO]: 🔴 Closing LONG position.
+2025-01-09 23:29:58 [INFO]: ✅ Order successfully placed: {'info': {'symbol': 'BTCUSDC', 'orderId': '3751518087', 'orderListId': '-1', 'clientOrderId': 'x-R4BD3S82968953e4aa150c37bbbb7', 'transactTime': '1736465398251', 'price': '0.00000000', 'origQty': '0.00010000', 'executedQty': '0.00010000', 'origQuoteOrderQty': '0.00000000', 'cummulativeQuoteQty': '9.22320000', 'status': 'FILLED', 'timeInForce': 'GTC', 'type': 'MARKET', 'side': 'SELL', 'workingTime': '1736465398251', 'fills': [{'price': '92232.00000000', 'qty': '0.00010000', 'commission': '0.00876204', 'commissionAsset': 'USDC', 'tradeId': '127720990'}], 'selfTradePreventionMode': 'EXPIRE_MAKER'}, 'id': '3751518087', 'clientOrderId': 'x-R4BD3S82968953e4aa150c37bbbb7', 'timestamp': 1736465398251, 'datetime': '2025-01-09T23:29:58.251Z', 'lastTradeTimestamp': 1736465398251, 'lastUpdateTimestamp': 1736465398251, 'symbol': 'BTC/USDC', 'type': 'market', 'timeInForce': 'GTC', 'postOnly': False, 'reduceOnly': None, 'side': 'sell', 'price': 92232.0, 'triggerPrice': None, 'amount': 0.0001, 'cost': 9.2232, 'average': 92232.0, 'filled': 0.0001, 'remaining': 0.0, 'status': 'closed', 'fee': {'currency': 'USDC', 'cost': 0.00876204}, 'trades': [{'info': {'price': '92232.00000000', 'qty': '0.00010000', 'commission': '0.00876204', 'commissionAsset': 'USDC', 'tradeId': '127720990'}, 'timestamp': None, 'datetime': None, 'symbol': 'BTC/USDC', 'id': '127720990', 'order': None, 'type': None, 'side': None, 'takerOrMaker': None, 'price': 92232.0, 'amount': 0.0001, 'cost': 9.2232, 'fee': {'currency': 'USDC', 'cost': 0.00876204}, 'fees': [{'currency': 'USDC', 'cost': 0.00876204}]}], 'fees': [{'currency': 'USDC', 'cost': 0.00876204}], 'stopPrice': None, 'takeProfitPrice': None, 'stopLossPrice': None}
+2025-01-09 23:29:59 [INFO]: ✅ Plot saved as ./data/live_runs/run18/plot.png
+2025-01-09 23:29:59 [INFO]: ✅ Run completed. Waiting 1 minute before the next iteration...
+2025-01-09 23:30:06 [INFO]: 🛑 Live trading manually stopped by user.
+2025-01-09 23:30:07 [INFO]: ✅ Plot saved as ./data/live_runs/run18/plot.png
+2025-01-09 23:30:07 [INFO]: ✅ Final plot generated successfully.
+2025-01-09 23:30:07 [INFO]: ✅ Live trading session completed.
