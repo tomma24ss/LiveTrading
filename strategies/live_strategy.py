@@ -81,7 +81,6 @@ class LiveStrategy:
 
 
     def get_signal(self):
-        return Signal.SELL_LONG
         """
         Generate trading signals based on strategy logic.
         Returns: Signal Enum (BUY, SELL, HOLD)
