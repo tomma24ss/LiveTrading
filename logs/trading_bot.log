@@ -1,3 +1,43 @@
-2025-01-08 17:22:33 [INFO]: Logger initialized with file level: DEBUG and console level: INFO
-2025-01-08 17:22:36 [INFO]: ✅ Binance Futures Client initialized.
-2025-01-08 17:22:41 [ERROR]: ❌ Failed to fetch balance: binance {"code":-2015,"msg":"Invalid API-key, IP, or permissions for action"}
+2025-01-09 15:26:44 [INFO]: Logger initialized with file level: DEBUG and console level: INFO
+2025-01-09 15:26:53 [INFO]: ✅ Binance Futures Client initialized.
+2025-01-09 15:26:53 [INFO]: ✅ Live Strategy Initialized.
+2025-01-09 15:26:53 [INFO]: 📁 Created run folder: ./data/live_runs/run2
+2025-01-09 15:26:53 [INFO]: 💾 Configuration saved to ./data/live_runs/run2/config_backup.py
+2025-01-09 15:26:53 [INFO]: 📄 Created new CSV file: ./data/live_runs/run2/data_trade.csv
+2025-01-09 15:26:53 [INFO]: 📥 Fetching 1000 minutes of historical data...
+2025-01-09 15:26:53 [INFO]: 📥 Fetching historical data for BTCUSDC, interval 1m, limit 1000...
+2025-01-09 15:26:53 [INFO]: ✅ Successfully fetched historical data.
+2025-01-09 15:26:53 [INFO]: 📥 Prefilling strategy with historical data...
+2025-01-09 15:26:53 [INFO]: ✅ Historical data successfully prefilled with indicators.
+2025-01-09 15:26:53 [INFO]: 📊 Prefill Data Preview:
+            timestamp    close      FAST_IND      SLOW_IND   action position stop_reason error_message
+0 2025-01-08 22:47:00  95121.9  95121.900000  95121.900000  PREFILL     NONE                          
+1 2025-01-08 22:48:00  94996.0  95058.320500  95058.792625  PREFILL     NONE                          
+2 2025-01-08 22:49:00  95013.9  95043.216553  95043.753533  PREFILL     NONE                          
+3 2025-01-08 22:50:00  94983.2  95027.759320  95028.501423  PREFILL     NONE                          
+4 2025-01-08 22:51:00  94901.8  95001.549807  95002.907104  PREFILL     NONE                          
+2025-01-09 15:26:53 [INFO]: ✅ Prefilled data successfully written to CSV with indicators.
+2025-01-09 15:26:53 [INFO]: 🚀 Starting live trading for BTCUSDC on Binance...
+2025-01-09 15:26:53 [INFO]: 📊 Fetched ticker for BTCUSDC: 93309.8
+2025-01-09 15:26:53 [INFO]: 📊 Indicators updated.
+2025-01-09 15:26:53 [INFO]: 📈 Current Price: 93309.8, FAST_IND: 92670.51870452586, SLOW_IND: 93006.50877021659
+2025-01-09 15:26:53 [INFO]: HOLD position triggered.
+2025-01-09 15:26:53 [INFO]: 📝 Recording trade: {'timestamp': '2025-01-09 15:26:53', 'close': 93309.8, 'FAST_IND': np.float64(92670.51870452586), 'SLOW_IND': np.float64(93006.50877021659), 'action': 'HOLD', 'position': '', 'stop_reason': 'Unknown', 'error_message': ''}
+2025-01-09 15:26:53 [INFO]: ✅ Data  successfully written to CSV.
+2025-01-09 15:26:53 [INFO]: 📊 Generating trading results plot...
+2025-01-09 15:26:54 [INFO]: ✅ Plot saved as ./data/live_runs/run2/plot.png
+2025-01-09 15:26:54 [INFO]: ✅ Run completed. Waiting 1 minute before the next iteration...
+2025-01-09 15:27:54 [INFO]: 📊 Fetched ticker for BTCUSDC: 93416.1
+2025-01-09 15:27:54 [INFO]: 📊 Indicators updated.
+2025-01-09 15:27:54 [INFO]: 📈 Current Price: 93416.1, FAST_IND: 92685.28269060407, SLOW_IND: 93008.56533826636
+2025-01-09 15:27:54 [INFO]: HOLD position triggered.
+2025-01-09 15:27:54 [INFO]: 📝 Recording trade: {'timestamp': '2025-01-09 15:27:54', 'close': 93416.1, 'FAST_IND': np.float64(92685.28269060407), 'SLOW_IND': np.float64(93008.56533826636), 'action': 'HOLD', 'position': '', 'stop_reason': 'Unknown', 'error_message': ''}
+2025-01-09 15:27:54 [INFO]: ✅ Data  successfully written to CSV.
+2025-01-09 15:27:54 [INFO]: 📊 Generating trading results plot...
+2025-01-09 15:27:55 [INFO]: ✅ Plot saved as ./data/live_runs/run2/plot.png
+2025-01-09 15:27:55 [INFO]: ✅ Run completed. Waiting 1 minute before the next iteration...
+2025-01-09 15:27:57 [INFO]: 🛑 Live trading manually stopped by user.
+2025-01-09 15:27:57 [INFO]: 📊 Generating trading results plot...
+2025-01-09 15:27:57 [INFO]: ✅ Plot saved as ./data/live_runs/run2/plot.png
+2025-01-09 15:27:57 [INFO]: ✅ Final plot generated successfully.
+2025-01-09 15:27:57 [INFO]: ✅ Live trading session completed.

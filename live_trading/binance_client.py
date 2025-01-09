@@ -8,7 +8,7 @@ import ccxt
 
 
 class BinanceClient:
-    def __init__(self, api_key, secret_key, testnet=True, proxy=None):
+    def __init__(self, api_key, secret_key):
         self.exchange = ccxt.binance({
             'apiKey': api_key,
             'secret': secret_key,
@@ -17,21 +17,10 @@ class BinanceClient:
                 'defaultType': 'future'  # Enable Futures Trading
             }
         })
-        
-        # Apply proxy if provided
-        if proxy:
-            self.exchange.proxies = {
-                'http': proxy,
-                'https': proxy,
-            }
-            logger.info(f"🛡️ Proxy enabled: {proxy}")
-        
-        if testnet:
-            self.exchange.set_sandbox_mode(True)
-            logger.info("🔧 Testnet mode enabled.")
+        self.exchange.load_markets()
+        # self.exchange.verbose = True  # uncomment this line if it doesn't work
         
         logger.info("✅ Binance Futures Client initialized.")
-        self.get_balance()
 
 
     def set_leverage(self, symbol: str, leverage: int):
@@ -59,14 +48,14 @@ class BinanceClient:
             logger.error(f"❌ Failed to fetch ticker: {e}")
             raise
 
-    def create_order(self, symbol: str, order_type: str, side: str, amount: float, price: float = None, leverage: int = 1):
+    def create_order(self, symbol: str, order_type: str, side: str, amount: float, price: float = None):
         """
         Place an order on Binance Futures.
         """
         try:
-            self.set_leverage(symbol, leverage)
-
-            params = {'leverage': leverage}
+            params = {
+                'test': True
+            }
 
             if order_type == 'LIMIT' and price:
                 order = self.exchange.create_order(
@@ -91,46 +80,25 @@ class BinanceClient:
         except Exception as e:
             logger.error(f"❌ Failed to place order: {e}")
             raise
-
-    def close_position(self, symbol: str, side: str, amount: float):
-        """
-        Close an existing Futures position.
-        """
-        try:
-            order = self.exchange.create_order(
-                symbol=symbol,
-                type='market',
-                side=side,
-                amount=amount
-            )
-            logger.info(f"✅ Position closed successfully: {order}")
-            return order
-        except Exception as e:
-            logger.error(f"❌ Failed to close position: {e}")
-            raise
-
+        
     def get_balance(self):
-        """Fetch Futures wallet balance."""
+        """Fetch and print all wallet balances where the total is greater than 0."""
         try:
+            # Fetch balance from the exchange
             balance = self.exchange.fetch_balance()
-            futures_balance = balance.get('USDT', {}).get('free', 0)
-            logger.info(f"💰 Futures wallet balance: {futures_balance} USDT")
-            return futures_balance
+            
+            # Handle Euro specifically if available
+            euro_balance = balance.get('USDC', {}).get('total', 0)
+            if euro_balance > 0:
+                logger.info(f"💶 Euro Total Balance: {euro_balance} EUR")
+            return euro_balance
+    
         except Exception as e:
-            logger.error(f"❌ Failed to fetch balance: {e}")
+            logger.error(f"❌ Failed to fetch wallet balances: {e}")
             raise
 
-    def cancel_order(self, symbol: str, order_id: str):
-        """Cancel an open order."""
-        try:
-            result = self.exchange.cancel_order(order_id, symbol)
-            logger.info(f"✅ Order {order_id} canceled successfully.")
-            return result
-        except Exception as e:
-            logger.error(f"❌ Failed to cancel order: {e}")
-            raise
 
-    def get_historical_klines(self, symbol: str, interval: str = '1m', limit: int = 1000):
+    def get_historical_klines(self, symbol: str, interval: str = '1m', limit: int = 1200):
         """
         Fetch historical OHLCV data.
         """
@@ -182,7 +150,7 @@ if __name__ == "__main__":
         raise ValueError("❌ API_KEY and SECRET_KEY environment variables must be set.")
     
     try:
-        client = BinanceClient(api_key=API_KEY, secret_key=SECRET_KEY, testnet=True, proxy=PROXY)
+        client = BinanceClient(api_key=API_KEY, secret_key=SECRET_KEY, testnet=False)
 
         # Test Connectivity
         logger.info("🔗 Testing Binance API connectivity...")
@@ -192,7 +160,7 @@ if __name__ == "__main__":
 
         print("\n✅ Binance API Test Successful:")
         print(f"🕒 Server Time: {server_time}")
-        print(f"💰 Balance: {balance} USDT")
+        print(f"💰 Balance: {balance} EUR")
         print(f"📊 BTC/USDT Ticker Last Price: {ticker['last']}")
 
     except Exception as e:

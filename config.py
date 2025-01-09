@@ -8,7 +8,7 @@ load_dotenv()
 
 API_KEY = os.getenv('API_KEY')
 SECRET_KEY = os.getenv('SECRET_KEY')
-TESTNET = os.getenv('TESTNET') == 'True'
+TESTNET = os.getenv('TESTNET') == 'True'  # Set to False for live trading
 
 # Trading Parameters
 LIVE_SYMBOL = os.getenv('LIVE_SYMBOL')

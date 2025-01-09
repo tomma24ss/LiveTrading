@@ -34,9 +34,6 @@ class OrderManager:
         :return: Order details
         """
         try:
-            # Set Leverage
-            # self.set_leverage(symbol, leverage)
-            
             # Place Order via BinanceClient
             order = self.client.create_order(
                 symbol=symbol,
@@ -44,7 +41,6 @@ class OrderManager:
                 side=side,
                 amount=quantity,
                 price=price,
-                leverage=leverage
             )
 
             logger.info(f"✅ Order successfully placed: {order}")
@@ -52,26 +48,6 @@ class OrderManager:
 
         except (BinanceAPIException, BinanceOrderException) as e:
             logger.error(f"❌ Failed to place order: {e}")
-            raise
-
-    def close_position(self, symbol: str, side: str, quantity: float):
-        """
-        Close an open Futures position.
-        
-        :param symbol: Trading pair (e.g., 'BTC/USDT')
-        :param side: Side to close position ('BUY' for SHORT, 'SELL' for LONG)
-        :param quantity: Quantity to close
-        """
-        try:
-            order = self.client.close_position(
-                symbol=symbol,
-                side=side,
-                amount=quantity
-            )
-            logger.info(f"✅ Position closed successfully: {order}")
-            return order
-        except (BinanceAPIException, BinanceOrderException) as e:
-            logger.error(f"❌ Failed to close position: {e}")
             raise
 
     def cancel_order(self, symbol: str, order_id: int):

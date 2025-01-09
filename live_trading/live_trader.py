@@ -13,7 +13,7 @@ from datetime import datetime
 
 class LiveTrader:
     def __init__(self, config):
-        self.client = BinanceClient(config['API_KEY'], config['SECRET_KEY'], config['TESTNET'])
+        self.client = BinanceClient(config['API_KEY'], config['SECRET_KEY'])
         self.order_manager = OrderManager(self.client)
         self.strategy = LiveStrategy(
             stop_loss=config['STOP_LOSS'],
@@ -62,27 +62,36 @@ class LiveTrader:
                 f.write(f"{key} = {repr(value)}\n")
         logger.info(f"💾 Configuration saved to {self.config_backup_path}")
 
-    def record_trade(self, timestamp, price, action, position):
+    def record_data(self, timestamp, price, action, position):
         """Record live trade details incrementally into the CSV."""
-        trade_data = {
-            'timestamp': pd.to_datetime(timestamp).strftime('%Y-%m-%d %H:%M:%S'),
-            'close': price,
-            'FAST_IND': self.strategy.data['FAST_IND'].iloc[-1] if 'FAST_IND' in self.strategy.data.columns else None,
-            'SLOW_IND': self.strategy.data['SLOW_IND'].iloc[-1] if 'SLOW_IND' in self.strategy.data.columns else None,
-            'action': action,
-            'position': position,
-            'stop_reason': self.stop_reason,
-            'error_message': self.error_message
-        }
-        logger.info(f"📝 Recorded trade: {trade_data}")
+        try:
+            trade_data = {
+                'timestamp': pd.to_datetime(timestamp).strftime('%Y-%m-%d %H:%M:%S'),
+                'close': price,
+                'FAST_IND': self.strategy.data['FAST_IND'].iloc[-1] if not self.strategy.data.empty else None,
+                'SLOW_IND': self.strategy.data['SLOW_IND'].iloc[-1] if not self.strategy.data.empty else None,
+                'action': action,
+                'position': position,
+                'stop_reason': self.stop_reason,
+                'error_message': self.error_message
+            }
+            logger.info(f"📝 Recording trade: {trade_data}")
 
-        # # Write to CSV incrementally
-        # with open(self.csv_path, mode='a', newline='') as file:
-        #     writer = csv.DictWriter(
-        #         file,
-        #         fieldnames=['timestamp', 'close', 'FAST_IND', 'SLOW_IND', 'action', 'position', 'stop_reason', 'error_message']
-        #     )
-        #     writer.writerow(trade_data)
+            # Write to CSV incrementally
+            with open(self.csv_path, mode='a', newline='') as file:
+                writer = csv.DictWriter(
+                    file,
+                    fieldnames=['timestamp', 'close', 'FAST_IND', 'SLOW_IND', 'action', 'position', 'stop_reason', 'error_message']
+                )
+                # Write the header if the file is empty
+                if file.tell() == 0:
+                    writer.writeheader()
+                writer.writerow(trade_data)
+                logger.info("✅ Data  successfully written to CSV.")
+
+        except Exception as e:
+            logger.error(f"❌ Failed to record data: {e}")
+
 
 
 
@@ -105,12 +114,6 @@ class LiveTrader:
             prefilled_df['stop_reason'] = ''
             prefilled_df['error_message'] = ''
 
-            # Ensure Indicator Columns are Included
-            if 'FAST_IND' not in prefilled_df.columns:
-                prefilled_df['FAST_IND'] = self.strategy.data['FAST_IND'].values
-            if 'SLOW_IND' not in prefilled_df.columns:
-                prefilled_df['SLOW_IND'] = self.strategy.data['SLOW_IND'].values
-
             # Ensure proper column order
             expected_columns = ['timestamp', 'close', 'FAST_IND', 'SLOW_IND', 'action', 'position', 'stop_reason', 'error_message']
             prefilled_df = prefilled_df[expected_columns]
@@ -131,7 +134,7 @@ class LiveTrader:
 
 
     def run(self):
-        logger.info(f"🚀 Starting live trading for {self.symbol} on Binance Futures...")
+        logger.info(f"🚀 Starting live trading for {self.symbol} on Binance...")
         try:
             while True:
                 try:
@@ -139,57 +142,39 @@ class LiveTrader:
                     ticker = self.client.get_ticker(self.symbol)
                     price = ticker['last']
                     
-                    order_quantity = 20
-                    print(order_quantity)
-                    position_value = order_quantity * self.leverage
-                    order_quantity = 800 / price
-                    print(order_quantity)
+                    order_quantity = 1
                     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    logger.info(f"📊 Current Price: ${price:.2f}")
 
                     # Update strategy with the latest price
                     self.strategy.update_data(price)
                     signal = self.strategy.get_signal()
-
-                    # Handle Signals
-                    # if signal == Signal.BUY_LONG:  # Koop, uptrend
-                    #     logger.info("🟢 Opening LONG position.")
-                    #     self.order_manager.place_order(self.symbol, 'BUY', order_quantity, 'MARKET', price, self.leverage)
-                    #     self.record_trade(timestamp, price, 'BUY', 'LONG')
-
-                    # elif signal == Signal.SELL_LONG:
-                    #     logger.info("🔴 Closing LONG position.")
-                    #     self.order_manager.place_order(self.symbol, 'SELL', order_quantity, 'MARKET', price, self.leverage)
-                    #     self.record_trade(timestamp, price, 'SELL', 'LONG')
-
-                    # elif signal == Signal.BUY_SHORT:
-                    #     logger.info("🔴 Closing SHORT position.")
-                    #     self.order_manager.place_order(self.symbol, 'BUY', order_quantity, 'MARKET', price, self.leverage)
-                    #     self.record_trade(timestamp, price, 'BUY', 'SHORT')
-
-                    # elif signal == Signal.SELL_SHORT:
-                    #     logger.info("🟢 Opening SHORT position.")
-                    #     self.order_manager.place_order(self.symbol, 'SELL', order_quantity, 'MARKET', price, self.leverage)
-                    #     self.record_trade(timestamp, price, 'SELL', 'SHORT')
-
-                    # elif signal == Signal.STOP_LOSS_LONG:
-                    #     logger.warning("🛑 Stop-Loss triggered for LONG. Closing LONG position.")
-                    #     self.order_manager.place_order(self.symbol, 'SELL', order_quantity, 'MARKET', price, self.leverage)
-                    #     self.record_trade(timestamp, price, 'STOP_LOSS', 'LONG')
-                    #     # No new position opened here
-
-                    # elif signal == Signal.STOP_LOSS_SHORT:
-                    #     logger.warning("🛑 Stop-Loss triggered for SHORT. Closing SHORT position.")
-                    #     self.order_manager.place_order(self.symbol, 'BUY', order_quantity, 'MARKET', price, self.leverage)
-                    #     self.record_trade(timestamp, price, 'STOP_LOSS', 'SHORT')
-
-
+                    
+                    #Handle Signals
+                    if signal == Signal.BUY_LONG:  # Koop, uptrend
+                        logger.info("🟢 Opening LONG position.")
+                        self.order_manager.place_order(self.symbol, 'BUY', order_quantity, 'MARKET', price)
+                        self.record_data(timestamp, price, 'BUY', 'LONG')
+                    elif signal == Signal.SELL_LONG:
+                        logger.info("🔴 Closing LONG position.")
+                        self.order_manager.place_order(self.symbol, 'SELL', order_quantity, 'MARKET', price)
+                        self.record_data(timestamp, price, 'SELL', 'LONG')
+                    elif signal == Signal.STOP_LOSS_LONG:
+                        logger.info("🛑 Stop-Loss triggered for LONG. Closing LONG position.")
+                        self.order_manager.place_order(self.symbol, 'SELL', order_quantity, 'MARKET', price)
+                        self.record_data(timestamp, price, 'STOP_LOSS', 'LONG')
+                    elif signal == Signal.HOLD:
+                        logger.info("HOLD position triggered.")
+                        self.record_data(timestamp, price, 'HOLD', '')
+                        
                     # Update plot
                     try:
                         df = pd.read_csv(self.csv_path, parse_dates=['timestamp'])
+                        df.set_index('timestamp', inplace=True)  # Set 'timestamp' as the index
                         plot_results(df, self.plot_path)
                     except Exception as plot_error:
                         logger.error(f"❌ Failed to generate plot: {plot_error}")
+                    
+                    logger.info("✅ Run completed. Waiting 1 minute before the next iteration...")
                     time.sleep(60)  # Wait 1 minute before the next cycle
 
                 except Exception as e:

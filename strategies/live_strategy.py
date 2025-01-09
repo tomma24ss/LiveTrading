@@ -6,10 +6,7 @@ from enum import Enum
 class Signal(Enum):
     BUY_LONG = "BUY_LONG"
     SELL_LONG = "SELL_LONG"
-    BUY_SHORT = "BUY_SHORT"
-    SELL_SHORT = "SELL_SHORT"
     STOP_LOSS_LONG = "STOP_LOSS_LONG"
-    STOP_LOSS_SHORT = "STOP_LOSS_SHORT"
     HOLD = "HOLD"
 
 
@@ -32,7 +29,6 @@ class LiveStrategy:
         self.uptrend_triggered = False
         self.downtrend_triggered = False
 
-
     def prefill_data(self, historical_data):
         """
         Prefill the strategy data with historical data and calculate indicators.
@@ -53,8 +49,6 @@ class LiveStrategy:
             logger.error(f"❌ Failed to prefill strategy data: {e}")
             raise
 
-
-
     def update_data(self, price):
         """
         Update live data with new price.
@@ -63,8 +57,8 @@ class LiveStrategy:
         new_row = {
             'timestamp': pd.Timestamp.now(),  # Add current timestamp
             'close': price,
-            'FAST_IND': None,  # Placeholder until calculated
-            'SLOW_IND': None   # Placeholder until calculated
+            'FAST_IND': float('nan'),  # Use NaN explicitly for consistency
+            'SLOW_IND': float('nan')   # Use NaN explicitly for consistency
         }
 
         new_row_df = pd.DataFrame([new_row])
@@ -86,6 +80,7 @@ class LiveStrategy:
             logger.warning("⚠️ Not enough data points for indicator calculation.")
 
 
+
     def get_signal(self):
         """
         Generate trading signals based on strategy logic.
@@ -105,27 +100,13 @@ class LiveStrategy:
         if self.position == 'long' and current_price <= self.entry_price * (1 - self.stop_loss):
             logger.warning("🛑 Stop-Loss triggered for LONG.")
             self.position = None
-            self.uptrend_triggered = False
             return Signal.STOP_LOSS_LONG
-
-        if self.position == 'short' and current_price >= self.entry_price * (1 + self.stop_loss):
-            logger.warning("🛑 Stop-Loss triggered for SHORT.")
-            self.position = None
-            self.downtrend_triggered = False
-            return Signal.STOP_LOSS_SHORT
 
         # Profit Target Logic
         if self.position == 'long' and current_price >= self.entry_price * (1 + self.profit_target):
             logger.info("🏆 Profit Target hit for LONG.")
             self.position = None
-            self.uptrend_triggered = False
             return Signal.SELL_LONG
-
-        if self.position == 'short' and current_price <= self.entry_price * (1 - self.profit_target):
-            logger.info("🏆 Profit Target hit for SHORT.")
-            self.position = None
-            self.downtrend_triggered = False
-            return Signal.BUY_SHORT
 
         # Entry Logic (Evaluate if no active position and trend trigger)
         if self.position is None:
@@ -136,15 +117,8 @@ class LiveStrategy:
                 self.downtrend_triggered = False
                 logger.info("🟢 Long Entry Signal Detected.")
                 return Signal.BUY_LONG
-
-            if self.enable_shorting and fast_ind < slow_ind and not self.downtrend_triggered:
-                self.position = 'short'
-                self.entry_price = current_price
-                self.downtrend_triggered = True
-                self.uptrend_triggered = False
-                logger.info("🔴 Short Entry Signal Detected.")
-                return Signal.SELL_SHORT
-
+        if fast_ind <= slow_ind:
+                    self.uptrend_triggered = False
         return Signal.HOLD
 
 
